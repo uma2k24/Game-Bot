@@ -1,14 +1,11 @@
 # Arda Mavi
 import os
-import sys
-import platform
 import numpy as np
 from time import sleep
 from PIL import ImageGrab
+from scipy.ndimage import zoom
 from game_control import *
 from predict import predict
-from scipy.misc import imresize
-from game_control import get_id
 from get_dataset import save_img
 from multiprocessing import Process
 from keras.models import model_from_json
@@ -17,44 +14,35 @@ from pynput.keyboard import Listener as key_listener
 
 def get_screenshot():
     img = ImageGrab.grab()
-    img = np.array(img)[:,:,:3] # Get first 3 channel from image as numpy array.
-    img = imresize(img, (150, 150, 3)).astype('float32')/255.
+    img = np.array(img)[:, :, :3]  # Get first 3 channels from image as numpy array.
+    img = zoom(img, (150 / img.shape[0], 150 / img.shape[1], 1), order=3).astype('float32') / 255.
     return img
 
 def save_event_keyboard(data_path, event, key):
-    key = get_id(key)
-    data_path = data_path + '/-1,-1,{0},{1}'.format(event, key)
+    key_id = get_id(key)
+    file_path = os.path.join(data_path, f'-1,-1,{event},{key_id}.png')
     screenshot = get_screenshot()
-    save_img(data_path, screenshot)
-    return
+    save_img(file_path, screenshot)
 
 def save_event_mouse(data_path, x, y):
-    data_path = data_path + '/{0},{1},0,0'.format(x, y)
+    file_path = os.path.join(data_path, f'{x},{y},0,0.png')
     screenshot = get_screenshot()
-    save_img(data_path, screenshot)
-    return
+    save_img(file_path, screenshot)
 
 def listen_mouse():
     data_path = 'Data/Train_Data/Mouse'
-    if not os.path.exists(data_path):
-        os.makedirs(data_path)
+    os.makedirs(data_path, exist_ok=True)
 
     def on_click(x, y, button, pressed):
-        save_event_mouse(data_path, x, y)
+        if pressed:
+            save_event_mouse(data_path, x, y)
 
-    def on_scroll(x, y, dx, dy):
-        pass
-    
-    def on_move(x, y):
-        pass
-
-    with mouse_listener(on_move=on_move, on_click=on_click, on_scroll=on_scroll) as listener:
+    with mouse_listener(on_click=on_click) as listener:
         listener.join()
 
 def listen_keyboard():
     data_path = 'Data/Train_Data/Keyboard'
-    if not os.path.exists(data_path):
-        os.makedirs(data_path)
+    os.makedirs(data_path, exist_ok=True)
 
     def on_press(key):
         save_event_keyboard(data_path, 1, key)
@@ -67,13 +55,11 @@ def listen_keyboard():
 
 def main():
     dataset_path = 'Data/Train_Data/'
-    if not os.path.exists(dataset_path):
-        os.makedirs(dataset_path)
+    os.makedirs(dataset_path, exist_ok=True)
 
-    # Start to listening mouse with new process:
-    Process(target=listen_mouse, args=()).start()
+    # Start listening to mouse events in a new process
+    Process(target=listen_mouse).start()
     listen_keyboard()
-    return
 
 if __name__ == '__main__':
     main()

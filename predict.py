@@ -1,13 +1,25 @@
 import numpy as np
+from keras.models import model_from_json
 from PIL import Image
 
-def predict(model, X):
-    # X'yi PIL Image objesine dönüştür
-    img = Image.fromarray(X)
-    # Resmi 150x150 boyutlarına yeniden boyutlandır
+def load_model():
+    with open('Data/Model/model.json', 'r') as model_file:
+        model_json = model_file.read()
+    model = model_from_json(model_json)
+    model.load_weights('Data/Model/weights.h5')
+    return model
+
+def predict(img_path):
+    model = load_model()
+    img = Image.open(img_path)
     img = img.resize((150, 150))
-    # Resmi numpy array'e dönüştür ve normalize et
-    X_resized = np.array(img).astype('float32') / 255.
-    # Model tahmini yap
-    Y = model.predict(X_resized.reshape(1, 150, 150, 3))
-    return Y
+    img = np.array(img).astype('float32') / 255.
+    img = np.expand_dims(img, axis=0)
+    
+    prediction = model.predict(img)
+    return prediction
+
+if __name__ == '__main__':
+    img_path = 'Data/Screenshots/sample.png'  # Update with the path to your image
+    prediction = predict(img_path)
+    print(prediction)

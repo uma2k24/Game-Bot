@@ -4,6 +4,7 @@ from PIL import ImageGrab
 from keras.models import model_from_json
 from game_control import get_key, press, release, click
 from predict import predict
+from time import sleep  # Import the sleep function from the time module
 
 def load_model():
     """Modeli JSON dosyasından yükleyin ve ağırlıkları yükleyin."""

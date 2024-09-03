@@ -1,44 +1,135 @@
-# Game Bot
-### By Arda Mavi
+# AI Model Training and Control
 
-Artificial intelligence that learns to play any game by watching you.
+## Overview
 
-## How does this work?
-- First: Run program and play any game for a little bit.
-- Second: Run program and watch the artificial intelligence play the game.
+This project involves training a deep learning model for image classification and automating control actions based on predictions. The model is designed to interact with applications by performing keyboard and mouse actions.
 
-## How does it work behind the scenes?
-When you run the training program, the program listens for your keyboard and mouse moving, then it saves those movements.<br>
-Artificial intelligence learn: When I push any button?<br/>
-And when you run the program, it plays the game just like you!
+## Project Structure
 
-## But how does it learn?
-##### Magic! (just joking)
-With deep learning.<br/>
-Deep Learning is a subfield of machine learning with neural networks inspired by the structure of the brains artificial neural networks.
+- **`get_dataset.py`**: Handles data loading, preprocessing, and saving.
 
-### Playing with Artificial Intelligence:
-1. Open your desired game (If you have already trained the artificial intelligence).
-2. Run `python3 ai.py` command in terminal.
+- **`get_model.py`**: Defines and manages the deep learning model architecture.
 
-### Creating Training Dataset:
-1. Run `python3 create_dataset.py` command in terminal.
-2. Play your desired game.
-3. Stop `create_dataset` program with `Cntrl-C` in terminal.
+- **`train_model.py`**: Trains the model with the dataset and saves the best model weights.
 
-### Model Training:
-`python3 train.py`
+- **`predict.py`**: Contains functions for making predictions with the trained model.
 
-### Using TensorBoard:
-`tensorboard --logdir=Data/Checkpoints/logs`
+- **`game_control.py`**: Manages keyboard and mouse actions based on predictions.
 
-### Important Notes:
-- Tested in Python version 3.6.0
+- **`database.py`**: Manages SQLite database connections and operations.
 
-- Install necessary modules with `sudo pip3 install -r requirements.txt` command.
+## Dependencies
 
-## WINDOWS Installation:
-- Install Python 3.6.0 : https://www.python.org/downloads/release/python-360/
-- Run CMD and Input Command `pip3 install -r requirements.txt`
+- TensorFlow 2.x
 
-### This project is still being worked on ...
+- Keras (integrated within TensorFlow 2.x)
+
+- NumPy
+
+- SciPy
+
+- scikit-learn
+
+- Pillow
+
+- pynput
+
+- sqlite3
+
+Install the dependencies using pip:
+
+```sh
+
+pip install tensorflow numpy scipy scikit-learn pillow pynput
+
+```
+
+## Usage
+
+### Data Preparation
+
+1\. **Collect Data**:
+
+   - Use `game_control.py` to record keyboard and mouse actions.
+
+   - The recorded data will be saved in `Data/Train_Data`.
+
+2\. **Create Dataset**:
+
+   - Run `get_dataset.py` to preprocess and save the dataset as numpy arrays.
+
+   ```sh
+
+   python3 get_dataset.py
+
+   ```
+
+### Model Training
+
+1\. **Define and Train the Model**:
+
+   - Run `train_model.py` to train the model with the prepared dataset.
+
+   ```sh
+
+   python3 train_model.py
+
+   ```
+
+2\. **Model Checkpoints**:
+
+   - Checkpoints and TensorBoard logs will be saved in `Data/Checkpoints/`.
+
+### Predictions
+
+1\. **Load and Predict**:
+
+   - Use `predict.py` to make predictions based on new input images.
+
+### Database Management
+
+1\. **SQLite Database**:
+
+   - `database.py` contains functions to interact with an SQLite database.
+
+## File Descriptions
+
+- **`get_dataset.py`**: 
+
+   - Preprocesses images from `Data/Train_Data` and splits them into training and testing datasets.
+
+   - Saves datasets as numpy arrays in `Data/npy_train_data/`.
+
+- **`get_model.py`**:
+
+   - Defines the Convolutional Neural Network (CNN) architecture.
+
+   - Saves and loads model configurations and weights.
+
+- **`train_model.py`**:
+
+   - Trains the model using the dataset and saves the best performing model weights.
+
+- **`predict.py`**:
+
+   - Contains the `predict` function to perform inference on new data.
+
+- **`game_control.py`**:
+
+   - Manages the interaction with the system using keyboard and mouse actions based on predictions.
+
+- **`database.py`**:
+
+   - Provides functions for interacting with an SQLite database, including creating tables and managing data.
+
+## Notes
+
+- Ensure that TensorFlow 2.x is installed as it integrates Keras and provides the required functionalities.
+
+- Adjust paths and configurations according to your project setup.
+
+- Refer to the TensorFlow and Keras documentation for further details on model training and callbacks.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

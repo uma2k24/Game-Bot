@@ -1,8 +1,7 @@
 numpy
-scikit-learn
-scikit-image
+scipy
 pillow
-tensorflow
 keras
+tensorflow
 pynput
-h5py
+scikit-learn

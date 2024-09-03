@@ -1,57 +1,58 @@
-# Arda Mavi
 import os
-import platform
 import numpy as np
-from time import sleep
 from PIL import ImageGrab
-from game_control import *
-from predict import predict
-from game_control import *
 from keras.models import model_from_json
+from game_control import get_key, press, release, click
+from predict import predict
 
 def main():
     # Get Model:
-    model_file = open('Data/Model/model.json', 'r')
-    model = model_file.read()
-    model_file.close()
-    model = model_from_json(model)
+    with open('Data/Model/model.json', 'r') as model_file:
+        model_json = model_file.read()
+    
+    model = model_from_json(model_json)
     model.load_weights("Data/Model/weights.h5")
 
     print('AI start now!')
 
-    while 1:
+    while True:
         # Get screenshot:
         screen = ImageGrab.grab()
         # Image to numpy array:
         screen = np.array(screen)
-        # 4 channel(PNG) to 3 channel(JPG)
+
+        # Predict action based on the model
         Y = predict(model, screen)
-        if Y == [0,0,0,0]:
-            # Not action
+
+        if Y == [0, 0, 0, 0]:
+            # No action needed
             continue
-        elif Y[0] == -1 and Y[1] == -1:
-            # Only keyboard action.
+        
+        if Y[0] == -1 and Y[1] == -1:
+            # Keyboard action only
             key = get_key(Y[3])
             if Y[2] == 1:
-                # Press:
+                # Press key
                 press(key)
             else:
-                # Release:
+                # Release key
                 release(key)
+        
         elif Y[2] == 0 and Y[3] == 0:
-            # Only mouse action.
+            # Mouse action only
             click(Y[0], Y[1])
+        
         else:
-            # Mouse and keyboard action.
-            # Mouse:
+            # Mouse and keyboard action
+            # Mouse action
             click(Y[0], Y[1])
-            # Keyboard:
+            # Keyboard action
             key = get_key(Y[3])
             if Y[2] == 1:
-                # Press:
+                # Press key
                 press(key)
             else:
-                # Release:
+                # Release key
                 release(key)
 
 if __name__ == '__main__':

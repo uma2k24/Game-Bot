@@ -2,6 +2,7 @@ import os
 import numpy as np
 from PIL import Image, ImageFile
 from sklearn.model_selection import train_test_split
+import json
 
 # Allow loading of truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -22,23 +23,30 @@ def save_img(img, path):
     img = Image.fromarray(img)
     img.save(path)
 
-def get_dataset(dataset_path='Data/Screenshots'):
-    """Load images from the dataset directory, preprocess them, and split into training and testing sets."""
-    labels = os.listdir(dataset_path) 
+def load_events(event_path):
+    """Load event data from a JSON file and return it as a list of events."""
+    events = []
+    try:
+        with open(event_path, 'r') as file:
+            events = json.load(file)
+    except (OSError, IOError) as e:
+        print(f"Error loading events from {event_path}: {e}")
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON from {event_path}: {e}")
+    return events
+
+def get_dataset(dataset_path='Data/Screenshots', mouse_events_path='mouse_events.json', keyboard_events_path='keyboard_events.json'):
+    """Load images and events from the dataset directory, preprocess them, and split into training and testing sets."""
+    labels = [f for f in os.listdir(dataset_path) if os.path.isfile(os.path.join(dataset_path, f)) and not f.startswith('.')]
     X = []
     Y = []
 
-    # Allowed image extensions
-    valid_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.gif', '.tiff')
+    # Load events
+    mouse_events = load_events(mouse_events_path)
+    keyboard_events = load_events(keyboard_events_path)
 
     for label in labels:
         img_path = os.path.join(dataset_path, label)
-
-        # Check if the file is an image by extension
-        if not img_path.lower().endswith(valid_extensions):
-            print(f"Skipping non-image file: {img_path}")
-            continue
-
         img = get_img(img_path)
         if img is not None:
             X.append(img)

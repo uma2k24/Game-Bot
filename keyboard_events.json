@@ -1,0 +1,242 @@
+[
+    {
+        "type": "press",
+        "key": "w",
+        "timestamp": 1726788277.2243154
+    },
+    {
+        "type": "release",
+        "key": "w",
+        "timestamp": 1726788277.3761597
+    },
+    {
+        "type": "press",
+        "key": "s",
+        "timestamp": 1726788277.768522
+    },
+    {
+        "type": "release",
+        "key": "s",
+        "timestamp": 1726788277.912308
+    },
+    {
+        "type": "press",
+        "key": "a",
+        "timestamp": 1726788278.1375506
+    },
+    {
+        "type": "release",
+        "key": "a",
+        "timestamp": 1726788278.2402542
+    },
+    {
+        "type": "press",
+        "key": "d",
+        "timestamp": 1726788278.471701
+    },
+    {
+        "type": "release",
+        "key": "d",
+        "timestamp": 1726788278.6002219
+    },
+    {
+        "type": "press",
+        "key": "w",
+        "timestamp": 1726788279.5765216
+    },
+    {
+        "type": "press",
+        "key": "w",
+        "timestamp": 1726788280.0810547
+    },
+    {
+        "type": "press",
+        "key": "w",
+        "timestamp": 1726788280.1125252
+    },
+    {
+        "type": "press",
+        "key": "w",
+        "timestamp": 1726788280.1439683
+    },
+    {
+        "type": "press",
+        "key": "w",
+        "timestamp": 1726788280.1900587
+    },
+    {
+        "type": "press",
+        "key": "w",
+        "timestamp": 1726788280.222937
+    },
+    {
+        "type": "release",
+        "key": "w",
+        "timestamp": 1726788280.2407286
+    },
+    {
+        "type": "press",
+        "key": "s",
+        "timestamp": 1726788280.761004
+    },
+    {
+        "type": "press",
+        "key": "s",
+        "timestamp": 1726788281.2727375
+    },
+    {
+        "type": "press",
+        "key": "s",
+        "timestamp": 1726788281.303514
+    },
+    {
+        "type": "press",
+        "key": "s",
+        "timestamp": 1726788281.3352947
+    },
+    {
+        "type": "press",
+        "key": "s",
+        "timestamp": 1726788281.3664067
+    },
+    {
+        "type": "release",
+        "key": "s",
+        "timestamp": 1726788281.368407
+    },
+    {
+        "type": "press",
+        "key": "a",
+        "timestamp": 1726788281.7844417
+    },
+    {
+        "type": "press",
+        "key": "a",
+        "timestamp": 1726788282.2928946
+    },
+    {
+        "type": "press",
+        "key": "a",
+        "timestamp": 1726788282.3225868
+    },
+    {
+        "type": "press",
+        "key": "a",
+        "timestamp": 1726788282.3544128
+    },
+    {
+        "type": "press",
+        "key": "a",
+        "timestamp": 1726788282.3852265
+    },
+    {
+        "type": "release",
+        "key": "a",
+        "timestamp": 1726788282.4082577
+    },
+    {
+        "type": "press",
+        "key": "d",
+        "timestamp": 1726788282.808067
+    },
+    {
+        "type": "press",
+        "key": "d",
+        "timestamp": 1726788283.3107615
+    },
+    {
+        "type": "release",
+        "key": "d",
+        "timestamp": 1726788283.327785
+    },
+    {
+        "type": "press",
+        "key": "Key.space",
+        "timestamp": 1726788283.6564429
+    },
+    {
+        "type": "release",
+        "key": "Key.space",
+        "timestamp": 1726788283.8797822
+    },
+    {
+        "type": "press",
+        "key": "Key.shift",
+        "timestamp": 1726788285.0971627
+    },
+    {
+        "type": "press",
+        "key": "Key.shift",
+        "timestamp": 1726788285.6040978
+    },
+    {
+        "type": "press",
+        "key": "Key.shift",
+        "timestamp": 1726788285.63612
+    },
+    {
+        "type": "press",
+        "key": "Key.shift",
+        "timestamp": 1726788285.667411
+    },
+    {
+        "type": "press",
+        "key": "Key.shift",
+        "timestamp": 1726788285.6991386
+    },
+    {
+        "type": "press",
+        "key": "Key.shift",
+        "timestamp": 1726788285.7303004
+    },
+    {
+        "type": "press",
+        "key": "Key.shift",
+        "timestamp": 1726788285.7621164
+    },
+    {
+        "type": "press",
+        "key": "Key.shift",
+        "timestamp": 1726788285.8083692
+    },
+    {
+        "type": "release",
+        "key": "Key.shift",
+        "timestamp": 1726788285.8325562
+    },
+    {
+        "type": "press",
+        "key": "Key.ctrl_l",
+        "timestamp": 1726788286.4643178
+    },
+    {
+        "type": "press",
+        "key": "Key.ctrl_l",
+        "timestamp": 1726788286.9784791
+    },
+    {
+        "type": "press",
+        "key": "Key.ctrl_l",
+        "timestamp": 1726788287.0095813
+    },
+    {
+        "type": "press",
+        "key": "Key.ctrl_l",
+        "timestamp": 1726788287.0417202
+    },
+    {
+        "type": "release",
+        "key": "Key.ctrl_l",
+        "timestamp": 1726788287.0567162
+    },
+    {
+        "type": "press",
+        "key": "Key.ctrl_l",
+        "timestamp": 1726788297.3841667
+    },
+    {
+        "type": "press",
+        "key": "\u0003",
+        "timestamp": 1726788297.5132203
+    }
+]

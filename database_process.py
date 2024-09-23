@@ -1,4 +1,3 @@
-# Arda Mavi
 import os
 import sqlite3
 

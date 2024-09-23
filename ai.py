@@ -1,76 +1,78 @@
-import os
+import pickle
+
+import time
 import numpy as np
-from PIL import ImageGrab
-from keras.models import model_from_json
+from PIL import Image
+from tensorflow.keras.models import model_from_json
+from mss import mss
+
 from game_control import get_key, press, release, click
 from predict import predict
-from time import sleep  # Import the sleep function from the time module
 
-def load_model():
-    """Modeli JSON dosyasından yükleyin ve ağırlıkları yükleyin."""
-    try:
-        with open('Data/Model/model.json', 'r') as model_file:
-            model_json = model_file.read()
-        model = model_from_json(model_json)
-        model.load_weights("Data/Model/weights.h5")
-        print('Model yüklendi ve ağırlıklar yüklendi.')
-        return model
-    except Exception as e:
-        print(f"Model yüklenirken bir hata oluştu: {e}")
-        raise
 
 def main():
-    # Modeli yükle
-    model = load_model()
+    """
+    Main function.
 
-    print('AI başladı!')
+    :return: None
+    """
+    with open("Data/Model/model.json", "r") as model_file:
+        model = model_file.read()
+    model = model_from_json(model)
+    model.load_weights("Data/Model/weights.h5")
 
-    while True:
-        try:
-            # Ekran görüntüsü al
-            screen = ImageGrab.grab()
-            # Resmi numpy array'ye dönüştür
-            screen = np.array(screen)
-
-            # Modeli kullanarak aksiyonu tahmin et
-            Y = predict(model, screen)
-
-            if Y == [0, 0, 0, 0]:
-                # Aksiyon gerekli değil
-                continue
-
-            if Y[0] == -1 and Y[1] == -1:
-                # Sadece klavye aksiyonu
-                key = get_key(Y[3])
-                if Y[2] == 1:
-                    # Tuş bas
-                    press(key)
-                else:
-                    # Tuşu bırak
-                    release(key)
-            
-            elif Y[2] == 0 and Y[3] == 0:
-                # Sadece fare aksiyonu
-                click(Y[0], Y[1])
-            
+    print("AI starting now!")
+    with open("listfile.data", "rb") as filehandle:
+        # read the data as binary data stream
+        places_list = pickle.load(filehandle)
+    while 1:
+        # Get screenshot:
+        with mss() as sct:
+            monitor = sct.monitors[1]
+            sct_img = sct.grab(monitor)
+            # Convert to PIL/Pillow Image
+            screen = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw",
+                                     "BGRX")
+            screen = np.array(screen)[
+                :, :, :3
+            ]  # Get first 3 channel from image as numpy array.
+        # 4 channel(PNG) to 3 channel(JPG)
+        y_ai = predict(model, screen)
+        print(y_ai)
+        y_ai = places_list[y_ai]
+        y_ai = [int(i) for i in y_ai]
+        print(y_ai)
+        if y_ai == [0, 0, 0, 0]:
+            # Not action
+            continue
+        if y_ai[0] == -1 and y_ai[1] == -1:
+            # Only keyboard action.
+            key = get_key(y_ai[3])
+            if y_ai[2] == 1:
+                # Press:
+                press(key)
             else:
-                # Fare ve klavye aksiyonu
-                # Fare aksiyonu
-                click(Y[0], Y[1])
-                # Klavye aksiyonu
-                key = get_key(Y[3])
-                if Y[2] == 1:
-                    # Tuş bas
-                    press(key)
-                else:
-                    # Tuşu bırak
-                    release(key)
+                # Release:
+                release(key)
+        elif y_ai[2] == 0 and y_ai[3] == 0:
+            # Click action.
+            click(y_ai[0], y_ai[1])
 
-        except Exception as e:
-            print(f"Bir hata oluştu: {e}")
+        # else:
+        #     # Mouse and keyboard action.
+        #     # Mouse:
+        #     click(int(y_ai[0]), int(y_ai[1]))
+        #     # Keyboard:
+        #     key = get_key(int(y_ai[3]))
+        #     if y_ai[2] == 1:
+        #         # Press:
+        #         press(key)
+        #     else:
+        #         # Release:
+        #         release(key)
 
-        # CPU kullanımını azaltmak için kısa bir uyku süresi ekleyin
-        sleep(0.1)
+        time.sleep(0.005)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

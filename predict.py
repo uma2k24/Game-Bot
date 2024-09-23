@@ -1,25 +1,21 @@
-import numpy as np
-from keras.models import model_from_json
+"""
+Make a prediction based on the input data.
+Author: Arda Mavi
+"""
 from PIL import Image
+from numpy import size
 
-def load_model():
-    with open('Data/Model/model.json', 'r') as model_file:
-        model_json = model_file.read()
-    model = model_from_json(model_json)
-    model.load_weights('Data/Model/weights.h5')
-    return model
 
-def predict(img_path):
-    model = load_model()
-    img = Image.open(img_path)
-    img = img.resize((150, 150))
-    img = np.array(img).astype('float32') / 255.
-    img = np.expand_dims(img, axis=0)
-    
-    prediction = model.predict(img)
-    return prediction
-
-if __name__ == '__main__':
-    img_path = 'Data/Screenshots/sample.png'  # Update with the path to your image
-    prediction = predict(img_path)
-    print(prediction)
+def predict(model, X):
+    """
+    This function will make a prediction based on the input data.
+    :param model: Which model to use.
+    :param X: input data.
+    :return: y_pred: prediction.
+    """
+    # resize it with PIL, because scipy.misc.imresize is deprecated.
+    x = X(Image.fromarray(X).resize((size[0] * 4, size[1] * 4),
+                                    resample=Image.BICUBIC))
+    y = model.predict(x.reshape(1, 150, 150, 3))
+    y = y.argmax()
+    return y

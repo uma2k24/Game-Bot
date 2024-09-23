@@ -1,105 +1,108 @@
-import time
+"""
+Game control logic
+"""
 import pyautogui
-import os
-import json
-from pynput import mouse, keyboard
 
-# Fare ve klavye olaylarını kaydetmek için listeler
-mouse_events = []
-keyboard_events = []
+from pynput.mouse import Controller as Mouse
+from pynput.keyboard import Key
 
-def capture_screen(filename):
-    screenshot = pyautogui.screenshot()
-    screenshot.save(filename)
 
-# Fare olaylarını işleyen işlevler
-def on_click(x, y, button, pressed):
-    mouse_events.append({
-        'type': 'click',
-        'x': x,
-        'y': y,
-        'button': str(button),
-        'pressed': pressed,
-        'timestamp': time.time()
-    })
+# For encoding keyboard keys:
+def get_keys():
+    """
+    Returns a list of all the keys that can be pressed.
+    :return: The list of keys.
+    """
+    return ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+            "a", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m", ",", ".",
+            "Key.space", "Key.shift", "Key.shift_r", "Key.esc", "Key.enter", "Key.backspace", "Key.tab", "Key.ctrl",
+            "Key.ctrl_r", "Key.caps_lock", "Key.page_up", "Key.page_down", "Key.end", "Key.home", "Key.delete",
+            "Key.insert", "Key.left", "Key.up", "Key.right", "Key.down", "Key.num_lock", "Key.print_screen",
+            "Key.f1", "Key.f2", "Key.f3", "Key.f4", "Key.f5", "Key.f6", "Key.f7", "Key.f8", "Key.f9", "Key.f10",
+            "Key.f11", "Key.f12"]
 
-def on_move(x, y):
-    mouse_events.append({
-        'type': 'move',
-        'x': x,
-        'y': y,
-        'timestamp': time.time()
-    })
 
-def on_scroll(x, y, dx, dy):
-    mouse_events.append({
-        'type': 'scroll',
-        'x': x,
-        'y': y,
-        'dx': dx,
-        'dy': dy,
-        'timestamp': time.time()
-    })
+def get_key(key_id):
+    """
+    Returns the key that corresponds to the given key id.
+    :param key_id: Set the key id.
+    :return: the key that corresponds to the given key id.
+    """
+    return get_keys()[key_id]
 
-# Klavye olaylarını işleyen işlevler
-def on_press(key):
+
+def get_id(key):
+    """
+    Returns the id of the given key.
+    :param key: The key.
+    :return: The id of the given key.
+    """
     try:
-        keyboard_events.append({
-            'type': 'press',
-            'key': key.char,
-            'timestamp': time.time()
-        })
-    except AttributeError:
-        keyboard_events.append({
-            'type': 'press',
-            'key': str(key),
-            'timestamp': time.time()
-        })
+        print("Key Pressed:", key.char, sep=" ")
+        return get_keys().index(key.char)
+    except:
+        if (str(key) + "") not in get_keys():
+            print((str(key) + ""), " is not in list")
+            return 1000
+    print("Key Pressed:", (str(key) + ""), sep=" ")
+    return get_keys().index((str(key) + ""))
 
-def on_release(key):
-    try:
-        keyboard_events.append({
-            'type': 'release',
-            'key': key.char,
-            'timestamp': time.time()
-        })
-    except AttributeError:
-        keyboard_events.append({
-            'type': 'release',
-            'key': str(key),
-            'timestamp': time.time()
-        })
 
-def main():
-    save_path = 'Data/Screenshots/'
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
+mouse = Mouse()
 
-    # Fare ve klavye dinleyicilerini başlat
-    mouse_listener = mouse.Listener(on_click=on_click, on_move=on_move, on_scroll=on_scroll)
-    keyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)
 
-    mouse_listener.start()
-    keyboard_listener.start()
+# Mouse:
+def move(x, y):
+    """
+    Moves the mouse to the given coordinates.
+    :param x: x coordinate.
+    :param y: y coordinate.
+    :return: None
+    """
+    pyautogui.moveTo(x, y)
 
-    try:
-        while True:
-            timestamp = int(time.time())
-            capture_screen(os.path.join(save_path, f'{timestamp}.png'))
-            time.sleep(1)  # Her saniye ekran görüntüsü al
-    except KeyboardInterrupt:
-        # Dinleyicileri durdur
-        mouse_listener.stop()
-        keyboard_listener.stop()
 
-        # Olayları JSON formatında kaydet
-        with open('mouse_events.json', 'w') as mouse_file:
-            json.dump(mouse_events, mouse_file, indent=4)
+def scroll(x, y):
+    """
+    Scrolls the mouse to the given coordinates.
+    :param x: The horizontal scroll.
+    :param y: The vertical scroll.
+    """
+    mouse.scroll(x, y)
 
-        with open('keyboard_events.json', 'w') as keyboard_file:
-            json.dump(keyboard_events, keyboard_file, indent=4)
 
-        print("Olaylar kaydedildi.")
+def click(x, y):
+    """
+    Clicks the mouse at the given coordinates.
+    :param x: The x coordinate.
+    :param y: The y coordinate.
+    """
+    move(x, y)
+    pyautogui.click()
 
-if __name__ == '__main__':
-    main()
+
+# Keyboard:
+def press(key):
+    """
+    Presses the given key.
+    :param key: The key.
+    """
+    if key in ["Key.shift", "shift"]:
+        pyautogui.keyDown("shift")
+    elif key in ["Key.space", "space"]:
+        pyautogui.keyDown("space")
+    else:
+        pyautogui.keyDown(key)
+
+
+def release(key):
+    """
+    Releases the given key.
+    :param key: the key.
+    """
+    if key in ["Key.shift", "shift"]:
+        pyautogui.keyUp(Key.shift)
+    elif key in ["Key.space", "space"]:
+        pyautogui.keyUp(Key.space)
+    else:
+        pyautogui.keyUp(key)
